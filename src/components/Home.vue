@@ -26,7 +26,7 @@
             :class="{ 'bg-red-400': card.mismatched, 'bg-blue-400': card.matched, 'bg-green-400': card.selected && !card.matched && !card.mismatched }"
           )
             font-awesome-icon(v-if="selectedCategory=='animals'" size="4x" :icon="['fas', card.name]")
-            img(v-else-if="selectedCategory=='nfcTeams'" :src="`/src/images/${card.name}.webp`" :class="{ 'hidden': !card.selected }")
+            img(v-else-if="selectedCategory=='nfcTeams'" :src="`/images/${card.name}.webp`" :class="{ 'hidden': !card.selected }")
         
 </template>
 
