@@ -22,7 +22,7 @@
       ) 
         .flip-card-inner(:class="{'flip-card-inner-selected': card.selected }")
           .flip-card-front.rounded-lg
-          .flip-card-back.rounded-lg.flex-center(
+          .flip-card-back.rounded-lg.flex-center.p-1(
             :class="{ 'bg-red-400': card.mismatched, 'bg-blue-400': card.matched, 'bg-green-400': card.selected && !card.matched && !card.mismatched }"
           )
             font-awesome-icon(v-if="selectedCategory=='animals'" size="4x" :icon="['fas', card.name]")
