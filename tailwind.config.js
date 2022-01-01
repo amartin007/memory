@@ -4,5 +4,5 @@ module.exports = {
     extend: {}
   },
   plugins: [],
-  separator: '_'
+  separator: '--'
 };
