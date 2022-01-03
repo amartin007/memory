@@ -36,6 +36,7 @@ import { reactive, ref, onMounted, watch } from 'vue';
 const selectedCategory = ref('animals');
 const selectedCards = ref([]);
 const cards = ref([]);
+const isClickable = ref(true);
 const iconArrays = reactive({
   animals: [
     { name: 'cat', selected: false, matched: false, mismatched: false },
@@ -85,10 +86,14 @@ function shuffle(deck) {
 }
 
 function cardClicked(card) {
+  if (!isClickable.value) {
+    return;
+  }
   let cards = selectedCards.value;
   card.selected = true;
   cards.push(card);
   if (cards.length == 2) {
+    isClickable.value = false;
     const card1 = cards[0];
     const card2 = cards[1];
     checkPair(card1, card2);
@@ -107,6 +112,7 @@ function checkPair(card1, card2) {
 function handleMatch(card1, card2) {
   card1.matched = true;
   card2.matched = true;
+  isClickable.value = true;
 }
 
 function handleMisMatch(card1, card2) {
@@ -117,6 +123,7 @@ function handleMisMatch(card1, card2) {
     card2.selected = false;
     card1.mismatched = false;
     card2.mismatched = false;
+    isClickable.value = true;
   }, 1000);
 }
 
