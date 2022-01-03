@@ -2,7 +2,6 @@
 //- LAYOUT
 .bg-sky-800.shadow-lg.shadow-slate-700.p-3.flex-center.relative
   h1.text-3xl.font-bold.text-white TILE MATCH
-//- SCOREBOARD
 //- MAIN CONTAINER
 .bg-white.py-9
   .text-center
@@ -12,6 +11,14 @@
     )
       option(value="animals" text="Animals")
       option(value="nfcTeams" text="NFC Teams")
+  //- SCOREBOARD
+  .mx-auto.bg-black.mb-6.p-6.rounded-lg.shadow-md.shadow-slate-700.flex.justify-between.text-white(class="w-11/12 lg--w-1/2")
+    div.flex-inline Moves: {{ moves }}
+    //- div.flex-inline Timer: {{ minutes }} mins {{ seconds }} secs
+    div.flex-inline Timer: {{ time }}
+    button(@click="reset" variant="transparent") 
+      | Restart
+      //- font-awesome-icon(size="sm" :icon="['fas', 'cat']")
   //- CARD
   .mx-auto.p-6.bg-stone-700.rounded-lg.shadow-lg.shadow-slate-700(class="w-11/12 lg--w-1/2")
     .grid.grid-cols-3.sm--grid-cols-3.md--grid-cols-4.gap-6
@@ -31,12 +38,17 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, watch } from 'vue';
+import { reactive, ref, onMounted, watch, computed } from 'vue';
 
 const selectedCategory = ref('animals');
 const selectedCards = ref([]);
 const cards = ref([]);
 const isClickable = ref(true);
+const moves = ref(0);
+const seconds = ref(0);
+const minutes = ref(0);
+const timerRunning = ref(false);
+const intervalRef = ref(null);
 const iconArrays = reactive({
   animals: [
     { name: 'cat', selected: false, matched: false, mismatched: false },
@@ -81,11 +93,24 @@ const iconArrays = reactive({
   ]
 });
 
+const time = computed(() => {
+  if (seconds.value == 60) {
+    seconds.value = 0;
+    minutes.value++;
+  }
+  return `${minutes.value} mins ${seconds.value} secs`;
+});
+
 function shuffle(deck) {
   deck.sort(() => 0.5 - Math.random());
 }
 
 function cardClicked(card) {
+  if (!timerRunning.value) {
+    timerRunning.value = true;
+    startTimer();
+  }
+
   if (!isClickable.value) {
     return;
   }
@@ -94,6 +119,7 @@ function cardClicked(card) {
   cards.push(card);
   if (cards.length == 2) {
     isClickable.value = false;
+    moves.value++;
     const card1 = cards[0];
     const card2 = cards[1];
     checkPair(card1, card2);
@@ -125,6 +151,21 @@ function handleMisMatch(card1, card2) {
     card1.mismatched = false;
     card2.mismatched = false;
   }, 1000);
+}
+
+function startTimer() {
+  intervalRef.value = setInterval(() => {
+    seconds.value++;
+  }, 1000);
+}
+
+function reset() {
+  clearInterval(intervalRef.value);
+  moves.value = 0;
+  seconds.value = 0;
+  minutes.value = 0;
+  timerRunning.value = false;
+  getCards();
 }
 
 function getCards() {
