@@ -20,10 +20,10 @@
         :key="card.id"
         @click="cardClicked(card)"
       ) 
-        .flip-card-inner(:class="{'flip-card-inner-selected': card.selected }")
+        .flip-card-inner(:class="{ 'flip-card-inner-selected': card.selected }")
           .flip-card-front.rounded-lg
           .flip-card-back.rounded-lg.flex-center.p-1(
-            :class="{ 'bg-red-400': card.mismatched, 'bg-blue-400': card.matched, 'bg-green-400': card.selected && !card.matched && !card.mismatched }"
+            :class="{ 'bg-red-400': card.mismatched, 'bg-blue-400': card.matched, 'bg-green-400': card.selected && !card.matched && !card.mismatched, 'bg-black': !card.selected && !card.matched && !card.mismatched }"
           )
             font-awesome-icon(v-if="selectedCategory=='animals'" size="4x" :icon="['fas', card.name]")
             img(v-else-if="selectedCategory=='nfcTeams'" :src="`/images/${card.name}.webp`" :class="{ 'hidden': !card.selected }")
@@ -119,11 +119,11 @@ function handleMisMatch(card1, card2) {
   card1.mismatched = true;
   card2.mismatched = true;
   setTimeout(() => {
+    isClickable.value = true;
     card1.selected = false;
     card2.selected = false;
     card1.mismatched = false;
     card2.mismatched = false;
-    isClickable.value = true;
   }, 1000);
 }
 
