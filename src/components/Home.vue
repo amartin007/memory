@@ -44,6 +44,7 @@ const selectedCategory = ref('animals');
 const selectedCards = ref([]);
 const cards = ref([]);
 const isClickable = ref(true);
+const matched = ref(0);
 const moves = ref(0);
 const seconds = ref(0);
 const minutes = ref(0);
@@ -136,6 +137,11 @@ function checkPair(card1, card2) {
 }
 
 function handleMatch(card1, card2) {
+  matched.value++;
+  if (matched.value === 8) {
+    clearInterval(intervalRef.value);
+    isClickable.value = false;
+  }
   card1.matched = true;
   card2.matched = true;
   isClickable.value = true;
